@@ -1,5 +1,5 @@
 # Brain Tumor Detection with YOLOv11
-_Brain tumor ddetection with Computer Vision YOLOv11 model. This model identifies bouding boxes that indicate tumor locations in MRI (Magnetic Resonance Imaging)._
+_Brain tumor detection with Computer Vision YOLOv11 model. This model identifies bouding boxes that indicate tumor locations in MRI (Magnetic Resonance Imaging)._
 
 ## Dataset
 The data comes ready to train, with yaml, the labels and images (with data augmentation, i think, because have rotations and zoons on it, but i can't prove that).
