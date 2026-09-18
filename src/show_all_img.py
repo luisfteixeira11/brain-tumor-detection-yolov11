@@ -1,29 +1,10 @@
 import cv2
+import glob
 import numpy as np
 
-PATH_IMAGE = r"brain-tumor-detection-yolov11\data\train\images\1_jpg.rf.eee6547c09d13001fff4a45c380115aa.jpg"
-PATH_TXT = r"brain-tumor-detection-yolov11\data\train\labels\1_jpg.rf.eee6547c09d13001fff4a45c380115aa.txt"
-
-def load_image(path):
-    """
-    read a image from specified file path
-    
-    Args: path(str) - the path file
-    Returns: None
-    """
-    # a command that can read the image path (have the parameter flags, but it's optional)
-    image = cv2.imread(path)
-
-    if image is None:
-        print("Error: unable to read")
-
-    # a function that can show the display a image 
-    cv2.imshow("window", image)
-
-    # a function that wait for a key press to close the window, if you put a number like 5000(ms) the window will keep 5 seconds open to close.
-    cv2.waitKey(0)
-    #obs: the destroyWindow() exist too
-    cv2.destroyAllWindows()
+# take the path of all .jpg
+caminhos_img = glob.glob(r"brain-tumor-detection-yolov11\data\train\images\*.jpg")
+caminhos_txt = glob.glob(r"brain-tumor-detection-yolov11\data\train\labels\*.txt")
 
 def read_label(path):
     """
@@ -49,17 +30,10 @@ def read_label(path):
     except Exception as error:
         return f"Error: {error}"
 
-def show_boxes(path, path_txt):
-    """
-    show a image from specified file path with your segmentation instance
-    
-    Args: path(str) - the path file
-    Returns: None
-    """
-
-    # reading the image and the row of .txt
-    image = cv2.imread(path)
-    label_numbers = read_label(path_txt)
+# function to show the image
+def mostrar_imagem(caminho_img, caminho_txt):
+    image = cv2.imread(caminho_img)
+    label_numbers = read_label(caminho_txt)
 
     # here is a possible exeption
     if image is None or not label_numbers:
@@ -92,11 +66,15 @@ def show_boxes(path, path_txt):
 
     # i don't understand why the pixel_points have to be in a list if i already reshaped this, but ok
     cv2.polylines(image, [pixel_points_array], isClosed=True, color=(0, 255, 0), thickness=2)
- 
-    cv2.imshow("Segmentation Instance", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
-if __name__ == "__main__":
-    load_image(PATH_IMAGE)
-    show_boxes(PATH_IMAGE, PATH_TXT)
+    x, y, w, h = cv2.boundingRect(pixel_points_array)
+
+    cv2.putText(image, class_id, (x, (y+h)), cv2.FONT_ITALIC, 0.6, (0, 255, 0), 2)
+
+    cv2.imshow("Imagens", image)
+    cv2.waitKey(0) 
+
+# apply the function in every path of path's list
+list(map(mostrar_imagem, caminhos_img, caminhos_txt))
+
+cv2.destroyAllWindows()
